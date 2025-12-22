@@ -70,5 +70,8 @@ if __name__ == "__main__":
 
     print(current_coords, from_coords, to_coords)
     drone_long, drone_lat = run(args.id ,current_coords, from_coords, to_coords, SERVER_URL)
-    # drone_long and drone_lat is the final location when drlivery is completed, find a way save the value, and use it for the initial coordinates of next delivery
+    
+    #=============================================================================
+    # drone_long and drone_lat is the final location when delivery is completed, find a way to save the value,
+    # and use it for the initial coordinates of next delivery in drone.py
     #=============================================================================
