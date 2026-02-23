@@ -11,24 +11,41 @@ app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 
 #Give a unique ID for the drone
 #===================================================================
-myID = "DRONE_ID"
+myID = "drone1"
 #===================================================================
 
 # Get initial longitude and latitude the drone
 #===================================================================
-current_longitude = 0
-current_latitude = 0
-#===================================================================
+def get_current_coords():
+    INITIAL_COOR_PATH = "/home/alexoliv/Documents/InfoCom-Drone-5-Multi-drone_System/pi/Initial_Coords.txt"
 
+    try:
+        with open(INITIAL_COOR_PATH, "r") as f:
+            longitude = float(f.readline().strip())
+            latitude = float(f.readline().strip())
+            print(longitude+" "+latitude)
+    except:
+        # Om filen inte finns eller är tom → sätt default startposition
+        longitude = 12.200449
+        latitude = 55.705595
+
+        with open(INITIAL_COOR_PATH, "w") as f:
+            f.write(f"{longitude}\n{latitude}")
+
+    return longitude, latitude
+    
+
+#===================================================================
+current_longitude, current_latitude = get_current_coords()
 drone_info = {'id': myID,
                 'longitude': current_longitude,
                 'latitude': current_latitude,
                 'status': 'idle'
             }
 
-# Fill in the IP address of server, and send the initial location of the drone to the SERVER
+# Fill in the IP address of server, and send the initial location of the drone to the SERVER    
 #===================================================================
-SERVER="http://SERVER_IP:PORT/drone"
+SERVER="http://192.168.1.10:5001/drone"
 with requests.Session() as session:
     resp = session.post(SERVER, json=drone_info)
 #===================================================================
@@ -38,8 +55,7 @@ def main():
     coords = request.json
     # Get current longitude and latitude of the drone 
     #===================================================================
-    current_longitude = 0
-    current_latitude = 0
+    current_longitude, current_latitude = get_current_coords()
     #===================================================================
     from_coord = coords['from']
     to_coord = coords['to']
